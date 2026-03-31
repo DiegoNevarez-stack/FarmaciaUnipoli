@@ -1,0 +1,14 @@
+/* MediConnect - Global minimal styles */
+/* All page styles are now inline in each .hbs view */
+/* This file kept for compatibility */
+
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; font-size: .8rem; font-weight: 600; color: #9E9B95; margin-bottom: 5px; text-transform: uppercase; letter-spacing: .05em; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid #EDECEA; border-radius: 12px;
+  font-size: .9rem; font-family: 'DM Sans', sans-serif;
+  color: #0D1B2A; background: #FAFAF8; outline: none;
+  resize: none; transition: border-color .2s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #0D1B2A; background: white; }

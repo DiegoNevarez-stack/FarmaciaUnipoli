@@ -1,0 +1,130 @@
+<style>
+.db-wrap { background: var(--bg); min-height: calc(100vh - 64px); }
+.db-hero { background: var(--ink); padding: 2.5rem 0; }
+.db-hero-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+.db-hero-title { font-family: var(--serif); font-size: 1.8rem; color: white; }
+.db-hero-sub { color: rgba(255,255,255,0.4); font-size: .88rem; margin-top: .2rem; }
+.db-hero-btn { padding: 9px 20px; border: 1.5px solid rgba(255,255,255,0.2); border-radius: 10px; color: rgba(255,255,255,0.7); font-size: .85rem; font-weight: 500; transition: all .2s; font-family: var(--sans); }
+.db-hero-btn:hover { border-color: white; color: white; }
+
+.db-body { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+
+.db-stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 1rem; margin-bottom: 2rem; }
+.db-stat { background: white; border: 1px solid var(--border); border-radius: 16px; padding: 1.4rem 1.6rem; }
+.db-stat-icon { font-size: 1.4rem; margin-bottom: .8rem; }
+.db-stat-val { font-family: var(--serif); font-size: 2rem; color: var(--ink); line-height: 1; margin-bottom: .2rem; }
+.db-stat-label { font-size: .78rem; color: var(--muted2); font-weight: 500; letter-spacing: .04em; }
+
+.db-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.db-card { background: white; border: 1px solid var(--border); border-radius: 18px; padding: 1.6rem; }
+.db-card-title { font-size: .7rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted2); margin-bottom: 1.4rem; display: flex; align-items: center; justify-content: space-between; }
+.db-card-title a { color: var(--green2); font-family: var(--sans); letter-spacing: 0; font-weight: 500; font-size: .8rem; text-transform: none; }
+
+.db-appt { display: flex; align-items: center; gap: .9rem; padding: .9rem 0; border-bottom: 1px solid var(--border); }
+.db-appt:last-child { border: none; padding-bottom: 0; }
+.db-appt-time { background: var(--bg); border-radius: 8px; padding: 6px 10px; font-size: .8rem; font-weight: 600; color: var(--ink); min-width: 52px; text-align: center; }
+.db-appt-info { flex: 1; }
+.db-appt-name { font-weight: 600; font-size: .92rem; }
+.db-appt-reason { font-size: .78rem; color: var(--muted2); }
+.db-appt-btns { display: flex; gap: .4rem; }
+.db-btn-ok { padding: 5px 12px; background: #F0FAF8; color: var(--green2); border: 1px solid rgba(0,198,160,0.25); border-radius: 7px; font-size: .78rem; font-weight: 600; cursor: pointer; font-family: var(--sans); transition: all .18s; }
+.db-btn-ok:hover { background: var(--green2); color: white; }
+.db-btn-no { padding: 5px 10px; background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; border-radius: 7px; font-size: .78rem; font-weight: 600; cursor: pointer; font-family: var(--sans); transition: all .18s; }
+.db-btn-no:hover { background: #FEE2E2; }
+
+.db-empty { text-align: center; padding: 2.5rem 1rem; color: var(--muted2); font-size: .88rem; }
+
+@media(max-width:800px){ .db-stats { grid-template-columns: repeat(2,1fr); } .db-grid { grid-template-columns: 1fr; } }
+</style>
+
+<div class="db-wrap">
+  <div class="db-hero">
+    <div class="container db-hero-inner">
+      <div>
+        <div class="db-hero-title">Panel médico</div>
+        <div class="db-hero-sub">Bienvenido, {{user.name}}</div>
+      </div>
+      <a href="/doctors/panel/edit-profile" class="db-hero-btn">✏️ Editar perfil</a>
+      <a href="/recetas/nueva" class="db-hero-btn" style="background:rgba(255,255,255,0.15);">📋 Emitir Receta</a>
+    </div>
+  </div>
+
+  <div class="db-body">
+    <div class="db-stats">
+      <div class="db-stat">
+        <div class="db-stat-icon">📅</div>
+        <div class="db-stat-val">{{todayAppts.length}}</div>
+        <div class="db-stat-label">Citas hoy</div>
+      </div>
+      <div class="db-stat">
+        <div class="db-stat-icon">⏳</div>
+        <div class="db-stat-val">{{pendingAppts.length}}</div>
+        <div class="db-stat-label">Pendientes</div>
+      </div>
+      <div class="db-stat">
+        <div class="db-stat-icon">⭐</div>
+        <div class="db-stat-val">{{doctor.rating}}</div>
+        <div class="db-stat-label">Calificación</div>
+      </div>
+      <div class="db-stat">
+        <div class="db-stat-icon">💬</div>
+        <div class="db-stat-val">{{doctor.reviewCount}}</div>
+        <div class="db-stat-label">Reseñas</div>
+      </div>
+    </div>
+
+    <div class="db-grid">
+      <div class="db-card">
+        <div class="db-card-title">Citas de hoy <a href="/doctors/panel/appointments">Ver todas →</a></div>
+        {{#if todayAppts.length}}
+          {{#each todayAppts}}
+            <div class="db-appt">
+              <div class="db-appt-time">{{time}}</div>
+              <div class="db-appt-info">
+                <div class="db-appt-name">{{patientName}}</div>
+                {{#if reason}}<div class="db-appt-reason">{{truncate reason 40}}</div>{{/if}}
+              </div>
+              {{#ifCond status '===' 'pending'}}
+                <div class="db-appt-btns">
+                  <button class="db-btn-ok" onclick="upd('{{id}}','confirmed')">✓</button>
+                  <button class="db-btn-no" onclick="upd('{{id}}','cancelled')">✕</button>
+                </div>
+              {{/ifCond}}
+            </div>
+          {{/each}}
+        {{else}}
+          <div class="db-empty">Sin citas para hoy 🎉</div>
+        {{/if}}
+      </div>
+
+      <div class="db-card">
+        <div class="db-card-title">Solicitudes pendientes</div>
+        {{#if pendingAppts.length}}
+          {{#each pendingAppts}}
+            <div class="db-appt">
+              <div class="db-appt-time" style="background:#FFF8EE;color:#B45309;">{{date}}<br/><span style="font-size:.7rem;font-weight:400;">{{time}}</span></div>
+              <div class="db-appt-info">
+                <div class="db-appt-name">{{patientName}}</div>
+                {{#if patientPhone}}<div class="db-appt-reason">📱 {{patientPhone}}</div>{{/if}}
+              </div>
+              <div class="db-appt-btns">
+                <button class="db-btn-ok" onclick="upd('{{id}}','confirmed')">✓</button>
+                <button class="db-btn-no" onclick="upd('{{id}}','cancelled')">✕</button>
+              </div>
+            </div>
+          {{/each}}
+        {{else}}
+          <div class="db-empty">Sin solicitudes pendientes ✓</div>
+        {{/if}}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+async function upd(id, status) {
+  if (!confirm(status === 'confirmed' ? '¿Confirmar cita?' : '¿Cancelar cita?')) return;
+  const r = await fetch(`/doctors/panel/appointments/${id}`, { method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({status}) });
+  if ((await r.json()).success) location.reload(); else alert('Error');
+}
+</script>

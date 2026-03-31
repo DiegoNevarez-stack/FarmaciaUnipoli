@@ -1,0 +1,191 @@
+<style>
+.dash-hero {
+  background: linear-gradient(135deg, #063d5e 0%, #0A5C8C 100%);
+  padding: 2rem 0;
+  margin-bottom: -2rem;
+}
+.dash-hero h1 { color: white; font-size: 1.6rem; }
+.dash-hero p { color: rgba(255,255,255,.7); margin-top: .3rem; font-size: .9rem; }
+
+.dash-layout {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 1.5rem 3rem;
+}
+
+.filter-row {
+  background: white;
+  border-radius: 14px;
+  padding: 1rem 1.4rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(10,92,140,0.1);
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.filter-row select,
+.filter-row input[type=date] {
+  padding: 9px 14px;
+  border: 2px solid #e4e8ef;
+  border-radius: 10px;
+  font-size: .9rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color .2s;
+  background: #f9fafb;
+  color: #1a2332;
+}
+.filter-row select:focus,
+.filter-row input[type=date]:focus { border-color: #0A5C8C; background: white; }
+.filter-row label { font-size: .85rem; font-weight: 600; color: #6b7a8d; white-space: nowrap; }
+
+.appt-row {
+  background: white;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(10,92,140,0.07);
+  border: 1px solid #e4e8ef;
+  margin-bottom: .8rem;
+  display: flex;
+  transition: all .2s;
+}
+.appt-row:hover { box-shadow: 0 6px 24px rgba(10,92,140,0.13); transform: translateY(-1px); }
+
+.appt-row-date {
+  background: linear-gradient(135deg, #0A5C8C, #1a7ab8);
+  color: white;
+  padding: 1.2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+  text-align: center;
+}
+.appt-row-day { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+.appt-row-month { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; opacity: .8; }
+.appt-row-time {
+  background: rgba(255,255,255,.2);
+  border-radius: 20px;
+  padding: 2px 7px;
+  font-size: .75rem;
+  font-weight: 700;
+  margin-top: 5px;
+}
+
+.appt-row-body {
+  padding: 1.2rem 1.4rem;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.appt-row-info { flex: 1; min-width: 150px; }
+.appt-row-name { font-size: 1rem; font-weight: 700; color: #1a2332; margin-bottom: .2rem; }
+.appt-row-phone { font-size: .83rem; color: #6b7a8d; }
+.appt-row-reason { font-size: .83rem; color: #6b7a8d; margin-top: .2rem; }
+
+.appt-row-actions { display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
+
+.status-pill { padding: 5px 12px; border-radius: 50px; font-size: .78rem; font-weight: 700; white-space: nowrap; }
+.status-pending   { background: #fff7e6; color: #d97706; border: 1px solid #fcd34d; }
+.status-confirmed { background: #ecfdf5; color: #059669; border: 1px solid #6ee7b7; }
+.status-cancelled { background: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; }
+.status-completed { background: #f0f9ff; color: #0284c7; border: 1px solid #7dd3fc; }
+
+.btn-ok {
+  padding: 7px 16px; background: #059669; color: white;
+  border: none; border-radius: 8px; font-size: .83rem;
+  font-weight: 700; cursor: pointer; transition: all .2s; font-family: inherit;
+}
+.btn-ok:hover { background: #047857; }
+.btn-no {
+  padding: 7px 16px; background: white; color: #dc2626;
+  border: 1.5px solid #fca5a5; border-radius: 8px; font-size: .83rem;
+  font-weight: 700; cursor: pointer; transition: all .2s; font-family: inherit;
+}
+.btn-no:hover { background: #fef2f2; }
+
+.empty-box {
+  text-align: center; padding: 3.5rem 2rem;
+  background: white; border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(10,92,140,0.08);
+}
+.empty-box .e-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+.empty-box h3 { color: #1a2332; margin-bottom: .4rem; }
+.empty-box p { color: #6b7a8d; }
+</style>
+
+<div class="dash-hero">
+  <div class="container">
+    <h1>📋 Gestión de Citas</h1>
+    <p>Confirma, cancela y administra tus citas</p>
+  </div>
+</div>
+
+<div class="dash-layout">
+
+  <!-- FILTROS -->
+  <form class="filter-row" action="/doctors/panel/appointments" method="GET">
+    <label>Estado:</label>
+    <select name="status" onchange="this.form.submit()">
+      <option value="">Todos</option>
+      <option value="pending"   {{#ifCond filters.status '===' 'pending'}}selected{{/ifCond}}>⏳ Pendientes</option>
+      <option value="confirmed" {{#ifCond filters.status '===' 'confirmed'}}selected{{/ifCond}}>✅ Confirmadas</option>
+      <option value="cancelled" {{#ifCond filters.status '===' 'cancelled'}}selected{{/ifCond}}>❌ Canceladas</option>
+    </select>
+    <label>Fecha:</label>
+    <input type="date" name="date" value="{{filters.date}}" onchange="this.form.submit()"/>
+    <a href="/doctors/panel/appointments" style="color:#6b7a8d;font-size:.85rem;font-weight:600;">Limpiar filtros</a>
+  </form>
+
+  {{#if appointments.length}}
+    {{#each appointments}}
+      <div class="appt-row">
+        <div class="appt-row-date">
+          <div class="appt-row-day">{{dayNumber date}}</div>
+          <div class="appt-row-month">{{monthShort date}}</div>
+          <div class="appt-row-time">{{time}}</div>
+        </div>
+        <div class="appt-row-body">
+          <div class="appt-row-info">
+            <div class="appt-row-name">👤 {{patientName}}</div>
+            {{#if patientPhone}}<div class="appt-row-phone">📱 {{patientPhone}}</div>{{/if}}
+            {{#if reason}}<div class="appt-row-reason">📝 {{truncate reason 60}}</div>{{/if}}
+          </div>
+          <div class="appt-row-actions">
+            <span class="status-pill status-{{status}}">{{statusLabel status}}</span>
+            {{#ifCond status '===' 'pending'}}
+              <button class="btn-ok" onclick="updateAppt('{{id}}','confirmed')">✓ Confirmar</button>
+              <button class="btn-no" onclick="updateAppt('{{id}}','cancelled')">✕ Cancelar</button>
+            {{/ifCond}}
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  {{else}}
+    <div class="empty-box">
+      <div class="e-icon">📋</div>
+      <h3>Sin citas con estos filtros</h3>
+      <p>Intenta cambiar el filtro de estado o fecha</p>
+    </div>
+  {{/if}}
+
+</div>
+
+<script>
+async function updateAppt(id, status) {
+  if (!confirm(status === 'confirmed' ? '¿Confirmar esta cita?' : '¿Cancelar esta cita?')) return;
+  const res  = await fetch(`/doctors/panel/appointments/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status })
+  });
+  const data = await res.json();
+  if (data.success) location.reload();
+  else alert('Error al actualizar');
+}
+</script>

@@ -1,0 +1,37 @@
+<nav class="navbar">
+  <div class="container nav-inner">
+    <a href="/" class="logo">
+      <svg width="32" height="32" viewBox="0 0 28 28" fill="none">
+        <rect width="28" height="28" rx="8" fill="#0A5C8C"/>
+        <path d="M14 7v14M7 14h14" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <span class="logo-text">Enfermeria Unipoli</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="/doctors/search">Buscar Medicos</a>
+      <a href="/medicinas">Medicinas</a>
+      {{#if user}}
+        {{#ifCond user.role '===' 'doctor'}}
+          <a href="/doctors/panel/dashboard">Mi Panel</a>
+          <a href="/recetas/nueva">📋 Emitir Receta</a>
+        {{else}}
+          {{#ifCond user.role '===' 'admin'}}
+            <a href="/admin/doctors">Panel Admin</a>
+          {{else}}
+            <a href="/appointments/my">Mis Citas</a>
+            <a href="/recetas/mis-recetas"> Mis Recetas</a>
+          {{/ifCond}}
+        {{/ifCond}}
+        <div class="nav-user">
+          <div class="user-avatar">{{firstLetter user.name}}</div>
+          <span>{{user.name}}</span>
+          <a href="/auth/logout" class="btn-logout">Salir</a>
+        </div>
+      {{else}}
+        <a href="/auth/login" class="btn-nav-login">Iniciar Sesion</a>
+        <a href="/auth/register" class="btn-nav-register">Registrarse</a>
+      {{/if}}
+    </div>
+    <button class="nav-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')">&#9776;</button>
+  </div>
+</nav>

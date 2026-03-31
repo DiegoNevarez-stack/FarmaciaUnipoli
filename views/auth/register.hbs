@@ -1,0 +1,67 @@
+<style>
+.auth-wrap { min-height: calc(100vh - 64px); display: grid; grid-template-columns: 1fr 1fr; background: var(--bg); }
+.auth-left { background: var(--ink); display: flex; align-items: center; justify-content: center; padding: 4rem; position: relative; overflow: hidden; }
+.auth-left-noise { position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; }
+.auth-left-glow { position: absolute; width: 400px; height: 400px; background: radial-gradient(circle, rgba(0,198,160,0.12) 0%, transparent 70%); bottom: -100px; left: -100px; pointer-events: none; }
+.auth-left-content { position: relative; color: white; max-width: 340px; }
+.auth-left-tag { display: inline-block; background: rgba(0,198,160,0.15); border: 1px solid rgba(0,198,160,0.3); color: var(--green); padding: 4px 12px; border-radius: 6px; font-size: .72rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 1.5rem; }
+.auth-left-title { font-family: var(--serif); font-size: 2.4rem; line-height: 1.15; margin-bottom: 1rem; }
+.auth-left-sub { color: rgba(255,255,255,0.4); font-size: .9rem; line-height: 1.7; }
+.auth-right { display: flex; align-items: center; justify-content: center; padding: 3rem 4rem; }
+.auth-card { width: 100%; max-width: 400px; }
+.auth-card-logo { display: flex; align-items: center; gap: .5rem; font-family: var(--serif); font-size: 1.1rem; color: var(--ink); margin-bottom: 2rem; }
+.auth-card-logo-icon { width: 28px; height: 28px; background: var(--ink); border-radius: 7px; display: grid; place-items: center; color: white; font-size: .8rem; }
+.auth-card h1 { font-family: var(--serif); font-size: 1.8rem; margin-bottom: .3rem; }
+.auth-card-sub { color: var(--muted2); font-size: .88rem; margin-bottom: 2rem; }
+.auth-msg { background: #fee2e2; color: #991b1b; padding: 10px 14px; border-radius: 10px; font-size: .85rem; margin-bottom: 1.2rem; }
+.auth-form { display: flex; flex-direction: column; gap: .9rem; }
+.auth-row { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; }
+.auth-label { display: block; font-size: .75rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted2); margin-bottom: .4rem; }
+.auth-input { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 12px; font-size: .9rem; font-family: var(--sans); color: var(--ink); background: white; outline: none; transition: border-color .2s; }
+.auth-input:focus { border-color: var(--ink); }
+.auth-submit { width: 100%; padding: 13px; background: var(--ink); color: white; border: none; border-radius: 12px; font-size: .95rem; font-weight: 500; font-family: var(--sans); cursor: pointer; margin-top: .4rem; transition: background .2s; }
+.auth-submit:hover { background: var(--ink2); }
+.auth-switch { text-align: center; font-size: .85rem; color: var(--muted2); margin-top: 1.2rem; }
+.auth-switch a { color: var(--ink); font-weight: 600; border-bottom: 1px solid var(--border); }
+@media(max-width:768px){ .auth-wrap { grid-template-columns: 1fr; } .auth-left { display: none; } .auth-right { padding: 2rem; } .auth-row { grid-template-columns: 1fr; } }
+</style>
+
+<div class="auth-wrap">
+  <div class="auth-left">
+    <div class="auth-left-noise"></div>
+    <div class="auth-left-glow"></div>
+    <div class="auth-left-content">
+      <div class="auth-left-tag">Únete gratis</div>
+      <h2 class="auth-left-title">Crea tu cuenta y accede a los mejores especialistas</h2>
+      <p class="auth-left-sub">Registro gratuito, sin compromisos. Agenda tu primera cita en menos de 2 minutos.</p>
+    </div>
+  </div>
+  <div class="auth-right">
+    <div class="auth-card">
+      <div class="auth-card-logo"><div class="auth-card-logo-icon">+</div>Enfermeria Unipoli</div>
+      <h1>Crear cuenta</h1>
+      <p class="auth-card-sub">Regístrate gratis y comienza hoy</p>
+      {{#if error}}<div class="auth-msg">⚠️ {{error}}</div>{{/if}}
+      <form class="auth-form" action="/auth/register" method="POST">
+        <div>
+          <label class="auth-label">Nombre completo</label>
+          <input class="auth-input" type="text" name="name" placeholder="Tu nombre completo" required/>
+        </div>
+        <div>
+          <label class="auth-label">Correo electrónico</label>
+          <input class="auth-input" type="email" name="email" placeholder="tu@email.com" required/>
+        </div>
+        <div>
+          <label class="auth-label">WhatsApp (para recordatorios)</label>
+          <input class="auth-input" type="tel" name="phone" placeholder="+521234567890"/>
+        </div>
+        <div>
+          <label class="auth-label">Contraseña</label>
+          <input class="auth-input" type="password" name="password" placeholder="Mínimo 6 caracteres" required minlength="6"/>
+        </div>
+        <button type="submit" class="auth-submit">Crear cuenta gratis</button>
+      </form>
+      <p class="auth-switch">¿Ya tienes cuenta? <a href="/auth/login">Inicia sesión</a></p>
+    </div>
+  </div>
+</div>

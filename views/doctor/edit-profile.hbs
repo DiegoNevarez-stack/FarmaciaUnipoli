@@ -1,0 +1,248 @@
+<style>
+.ep-hero { background: var(--ink); padding: 2.5rem 0 5rem; position: relative; overflow: hidden; }
+.ep-hero-wave { position: absolute; bottom: -1px; left: 0; right: 0; height: 50px; background: var(--bg); clip-path: ellipse(55% 100% at 50% 100%); }
+.ep-hero-title { font-family: var(--serif); font-size: 2rem; color: white; margin-bottom: .3rem; }
+.ep-hero-sub { color: rgba(255,255,255,0.4); font-size: .88rem; }
+.ep-hero-back { color: rgba(255,255,255,0.4); font-size: .85rem; display: inline-flex; align-items: center; gap: .4rem; margin-bottom: 1rem; transition: color .2s; }
+.ep-hero-back:hover { color: white; }
+
+.ep-wrap { max-width: 860px; margin: -2rem auto 4rem; padding: 0 2rem; position: relative; }
+
+.ep-card { background: white; border: 1px solid var(--border); border-radius: 20px; padding: 2rem; margin-bottom: 1.2rem; }
+.ep-section-label { font-size: .7rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--muted2); margin-bottom: 1.4rem; display: flex; align-items: center; gap: .6rem; }
+.ep-section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.ep-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.ep-grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+.ep-full { grid-column: 1 / -1; }
+
+.ep-field { display: flex; flex-direction: column; gap: .4rem; }
+.ep-label { font-size: .75rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted2); }
+.ep-input {
+  padding: 11px 14px;
+  border: 1.5px solid var(--border); border-radius: 12px;
+  font-size: .9rem; font-family: var(--sans); color: var(--ink);
+  background: #FAFAF8; outline: none; transition: border-color .2s;
+  width: 100%;
+}
+.ep-input:focus { border-color: var(--ink); background: white; }
+select.ep-input { cursor: pointer; }
+textarea.ep-input { resize: vertical; min-height: 90px; }
+
+/* PHOTO */
+.ep-photo-wrap { display: flex; align-items: center; gap: 1.5rem; }
+.ep-photo-preview { width: 80px; height: 80px; border-radius: 16px; overflow: hidden; background: var(--bg); flex-shrink: 0; border: 1.5px solid var(--border); display: grid; place-items: center; }
+.ep-photo-preview img { width: 100%; height: 100%; object-fit: cover; }
+.ep-photo-ph { font-family: var(--serif); font-size: 2rem; color: rgba(13,27,42,0.2); }
+.ep-photo-input-wrap { flex: 1; }
+.ep-photo-hint { font-size: .78rem; color: var(--muted2); margin-top: .4rem; }
+
+/* GEO */
+.ep-geo-btn {
+  display: inline-flex; align-items: center; gap: .5rem;
+  padding: 9px 16px; border: 1.5px solid var(--border);
+  border-radius: 10px; background: #FAFAF8; color: var(--muted);
+  font-size: .82rem; font-weight: 500; cursor: pointer;
+  font-family: var(--sans); transition: all .2s; margin-top: .5rem;
+}
+.ep-geo-btn:hover { border-color: var(--ink); color: var(--ink); background: white; }
+
+/* SCHEDULE */
+.ep-sched-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+.ep-day-col { background: var(--bg); border-radius: 12px; padding: 12px 8px; text-align: center; }
+.ep-day-name { font-size: .7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted2); margin-bottom: 10px; }
+.ep-day-times { display: flex; flex-direction: column; gap: 6px; }
+.ep-time-pair { display: flex; flex-direction: column; gap: 3px; }
+.ep-time-in { width: 100%; padding: 6px 4px; border: 1.5px solid var(--border); border-radius: 8px; font-size: .72rem; font-family: var(--sans); color: var(--ink); background: white; outline: none; text-align: center; }
+.ep-time-in:focus { border-color: var(--ink); }
+.ep-time-sep { font-size: .65rem; color: var(--muted2); text-align: center; }
+
+/* SUBMIT */
+.ep-submit {
+  width: 100%; padding: 14px;
+  background: var(--ink); color: white; border: none;
+  border-radius: 14px; font-size: 1rem; font-weight: 500;
+  font-family: var(--sans); cursor: pointer; transition: all .2s;
+}
+.ep-submit:hover { background: var(--ink2); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(13,27,42,0.2); }
+
+@media(max-width:700px){
+  .ep-grid, .ep-grid3 { grid-template-columns: 1fr; }
+  .ep-sched-grid { grid-template-columns: repeat(4, 1fr); }
+  .ep-photo-wrap { flex-direction: column; align-items: flex-start; }
+}
+</style>
+
+<div class="ep-hero">
+  <div class="ep-hero-wave"></div>
+  <div class="container">
+    <a href="/doctors/panel/dashboard" class="ep-hero-back">← Volver al panel</a>
+    <div class="ep-hero-title">Editar perfil</div>
+    <div class="ep-hero-sub">Mantén tu información actualizada para tus pacientes</div>
+  </div>
+</div>
+
+<div class="ep-wrap">
+  <form action="/doctors/panel/edit-profile" method="POST">
+
+    <!-- INFO BÁSICA -->
+    <div class="ep-card">
+      <div class="ep-section-label">Información básica</div>
+      <div class="ep-grid">
+        <div class="ep-field">
+          <label class="ep-label">Nombre completo</label>
+          <input class="ep-input" type="text" name="name" value="{{doctor.name}}" required/>
+        </div>
+        <div class="ep-field">
+          <label class="ep-label">Especialidad</label>
+          <select class="ep-input" name="specialty">
+            {{#each specialties}}
+              <option value="{{this}}" {{#ifCond this '===' ../doctor.specialty}}selected{{/ifCond}}>{{this}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="ep-field">
+          <label class="ep-label">WhatsApp del consultorio</label>
+          <input class="ep-input" type="tel" name="phone" value="{{doctor.phone}}" placeholder="+521234567890"/>
+        </div>
+        <div class="ep-field">
+          <label class="ep-label">Costo de consulta (MXN)</label>
+          <input class="ep-input" type="number" name="consultationFee" value="{{doctor.consultationFee}}" min="0"/>
+        </div>
+        <div class="ep-field ep-full">
+          <label class="ep-label">Biografía</label>
+          <textarea class="ep-input" name="bio" rows="3" placeholder="Describe tu experiencia y especialización...">{{doctor.bio}}</textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOTO -->
+    <div class="ep-card">
+      <div class="ep-section-label">Foto de perfil</div>
+      <div class="ep-photo-wrap">
+        <div class="ep-photo-preview" id="photoPreview">
+          {{#if doctor.photo}}
+            <img id="photoImg" src="{{doctor.photo}}" alt="Foto"/>
+          {{else}}
+            <div class="ep-photo-ph">{{firstLetter doctor.name}}</div>
+          {{/if}}
+        </div>
+        <div class="ep-photo-input-wrap">
+          <div class="ep-field">
+            <label class="ep-label">URL de la foto</label>
+            <input class="ep-input" type="url" name="photoUrl" id="photoUrl" value="{{doctor.photo}}" placeholder="https://..." oninput="updatePreview(this.value)"/>
+          </div>
+          <div class="ep-photo-hint">Pega el link directo de tu foto (Google Drive, Imgur, etc.)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- UBICACIÓN -->
+    <div class="ep-card">
+      <div class="ep-section-label">Ubicación del consultorio</div>
+      <div class="ep-grid">
+        <div class="ep-field ep-full">
+          <label class="ep-label">Dirección</label>
+          <input class="ep-input" type="text" name="address" id="addressInput" value="{{doctor.location.address}}" placeholder="Calle, número, colonia"/>
+        </div>
+        <div class="ep-field">
+          <label class="ep-label">Ciudad</label>
+          <input class="ep-input" type="text" name="city" value="{{doctor.location.city}}" placeholder="Ciudad de México"/>
+        </div>
+        <div class="ep-field">
+          <label class="ep-label">Estado</label>
+          <input class="ep-input" type="text" name="state" value="{{doctor.location.state}}" placeholder="CDMX"/>
+        </div>
+        <div class="ep-field">
+          <label class="ep-label">Latitud</label>
+          <input class="ep-input" type="number" name="lat" id="latInput" step="0.0001" value="{{doctor.location.lat}}"/>
+        </div>
+        <div class="ep-field">
+          <label class="ep-label">Longitud</label>
+          <input class="ep-input" type="number" name="lng" id="lngInput" step="0.0001" value="{{doctor.location.lng}}"/>
+        </div>
+      </div>
+      <button type="button" class="ep-geo-btn" onclick="getCoords()">
+        📍 Obtener coordenadas automáticamente
+      </button>
+    </div>
+
+    <!-- HORARIO -->
+    <div class="ep-card">
+      <div class="ep-section-label">Horario de atención</div>
+      <div class="ep-field" style="margin-bottom:1.2rem;max-width:200px;">
+        <label class="ep-label">Duración de cada cita</label>
+        <select class="ep-input" name="slotDuration">
+          <option value="15" {{#ifCond doctor.slotDuration '===' 15}}selected{{/ifCond}}>15 min</option>
+          <option value="20" {{#ifCond doctor.slotDuration '===' 20}}selected{{/ifCond}}>20 min</option>
+          <option value="30" {{#ifCond doctor.slotDuration '===' 30}}selected{{/ifCond}}>30 min</option>
+          <option value="45" {{#ifCond doctor.slotDuration '===' 45}}selected{{/ifCond}}>45 min</option>
+          <option value="60" {{#ifCond doctor.slotDuration '===' 60}}selected{{/ifCond}}>60 min</option>
+        </select>
+      </div>
+      <div class="ep-sched-grid">
+        {{#each days}}
+          <div class="ep-day-col">
+            <div class="ep-day-name">{{label}}</div>
+            <div class="ep-day-times">
+              {{#each blocks}}
+                <div class="ep-time-pair">
+                  <input class="ep-time-in" type="time" name="{{../key}}_start" value="{{start}}"/>
+                  <div class="ep-time-sep">↓</div>
+                  <input class="ep-time-in" type="time" name="{{../key}}_end" value="{{end}}"/>
+                </div>
+              {{/each}}
+              {{#unless blocks.length}}
+                <div class="ep-time-pair">
+                  <input class="ep-time-in" type="time" name="{{key}}_start" placeholder="--:--"/>
+                  <div class="ep-time-sep">↓</div>
+                  <input class="ep-time-in" type="time" name="{{key}}_end" placeholder="--:--"/>
+                </div>
+              {{/unless}}
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </div>
+
+    <button type="submit" class="ep-submit">Guardar cambios</button>
+  </form>
+</div>
+
+<script>
+function updatePreview(url) {
+  const img = document.getElementById('photoImg');
+  const prev = document.getElementById('photoPreview');
+  if (url) {
+    if (img) { img.src = url; }
+    else { prev.innerHTML = `<img id="photoImg" src="${url}" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'"/>`; }
+  }
+}
+
+async function getCoords() {
+  const address = document.getElementById('addressInput').value;
+  if (!address) return alert('Ingresa una dirección primero');
+  const btn = event.target;
+  btn.textContent = '⏳ Buscando...';
+  btn.disabled = true;
+  try {
+    const key = '{{geoapifyKey}}';
+    const url = `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(address)}&apiKey=${key}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if (data.features?.length) {
+      const [lng, lat] = data.features[0].geometry.coordinates;
+      document.getElementById('latInput').value = lat.toFixed(6);
+      document.getElementById('lngInput').value = lng.toFixed(6);
+      btn.textContent = '✓ Coordenadas obtenidas';
+    } else {
+      alert('No se encontró la dirección, ingresa las coordenadas manualmente');
+      btn.textContent = '📍 Obtener coordenadas automáticamente';
+    }
+  } catch(e) {
+    alert('Error al obtener coordenadas');
+    btn.textContent = '📍 Obtener coordenadas automáticamente';
+  }
+  btn.disabled = false;
+}
+</script>

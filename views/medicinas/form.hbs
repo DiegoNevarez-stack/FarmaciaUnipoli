@@ -1,0 +1,100 @@
+{{#> layouts/main title=title}}
+
+<style>
+  .form-hero{background:#0D1B2A;padding:2.5rem 0;margin-bottom:2.5rem;}
+  .form-hero h1{color:#fff;font-family:'DM Serif Display',serif;font-size:1.8rem;margin:0;}
+  .form-card{background:#fff;border:1px solid #EDECEA;border-radius:14px;padding:2rem;max-width:700px;margin:0 auto;}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
+  .form-group{display:flex;flex-direction:column;gap:.4rem;}
+  .form-group.full{grid-column:1/-1;}
+  .form-group label{font-size:.85rem;font-weight:700;color:#333;}
+  .form-group input,.form-group select,.form-group textarea{padding:.6rem .85rem;border:1px solid #ddd;border-radius:10px;font-size:.9rem;outline:none;transition:border-color .2s;}
+  .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:#00C6A0;}
+  .form-group textarea{resize:vertical;min-height:90px;}
+  .check-row{display:flex;align-items:center;gap:.6rem;padding:.75rem 0;}
+  .check-row input[type=checkbox]{width:18px;height:18px;accent-color:#00C6A0;}
+  .check-row label{font-size:.9rem;font-weight:600;color:#333;cursor:pointer;}
+  .form-actions{display:flex;gap:.75rem;margin-top:1.5rem;justify-content:flex-end;}
+  .btn-save{background:#00C6A0;color:#fff;padding:.65rem 1.5rem;border:none;border-radius:10px;font-weight:700;font-size:.95rem;cursor:pointer;}
+  .btn-cancel{background:#f5f5f5;color:#333;padding:.65rem 1.25rem;border:1px solid #ddd;border-radius:10px;text-decoration:none;font-size:.9rem;}
+  .alert-error{background:#FFEBEE;border:1px solid #e53e3e;color:#e53e3e;padding:.75rem 1rem;border-radius:8px;margin-bottom:1.25rem;font-size:.9rem;}
+  @media(max-width:600px){.form-grid{grid-template-columns:1fr;}}
+</style>
+
+<div class="form-hero">
+  <div class="container">
+    <a href="/medicinas" style="color:rgba(255,255,255,.6);text-decoration:none;font-size:.9rem;">← Catálogo</a>
+    <h1 style="margin-top:.5rem;">{{title}}</h1>
+  </div>
+</div>
+
+<div class="container" style="padding-bottom:3rem;">
+  <div class="form-card">
+
+    {{#if error}}
+      <div class="alert-error">⚠ {{error}}</div>
+    {{/if}}
+
+    <form method="POST" action="{{accion}}">
+
+      <div class="form-grid">
+
+        <div class="form-group full">
+          <label for="nombre">Nombre del medicamento *</label>
+          <input type="text" id="nombre" name="nombre" value="{{medicina.nombre}}" placeholder="Ej: Paracetamol 500mg" required>
+        </div>
+
+        <div class="form-group">
+          <label for="presentacion">Presentación *</label>
+          <select id="presentacion" name="presentacion" required>
+            <option value="">Seleccionar…</option>
+            {{#each presentaciones}}
+              <option value="{{this}}" {{#ifCond ../medicina.presentacion "===" this}}selected{{/ifCond}}>{{this}}</option>
+            {{/each}}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="laboratorio">Laboratorio</label>
+          <input type="text" id="laboratorio" name="laboratorio" value="{{medicina.laboratorio}}" placeholder="Ej: Bayer">
+        </div>
+
+        <div class="form-group">
+          <label for="precio">Precio (MXN) *</label>
+          <input type="number" id="precio" name="precio" value="{{medicina.precio}}" placeholder="0.00" min="0" step="0.01" required>
+        </div>
+
+        <div class="form-group">
+          <label for="stock">Stock (unidades)</label>
+          <input type="number" id="stock" name="stock" value="{{medicina.stock}}" placeholder="0" min="0">
+        </div>
+
+        <div class="form-group full">
+          <label for="dosis">Dosificación</label>
+          <input type="text" id="dosis" name="dosis" value="{{medicina.dosis}}" placeholder="Ej: 1 tableta cada 8 horas">
+        </div>
+
+        <div class="form-group full">
+          <label for="descripcion">Descripción</label>
+          <textarea id="descripcion" name="descripcion" placeholder="Descripción, indicaciones, contraindicaciones…">{{medicina.descripcion}}</textarea>
+        </div>
+
+        <div class="form-group full">
+          <div class="check-row">
+            <input type="checkbox" id="receta" name="receta" {{#if medicina.receta}}checked{{/if}}>
+            <label for="receta">Requiere receta médica</label>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+        <a href="/medicinas" class="btn-cancel">Cancelar</a>
+        <button type="submit" class="btn-save">💾 Guardar</button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+{{/layouts/main}}
